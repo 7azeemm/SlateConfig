@@ -11,14 +11,51 @@ repositories {
         name = 'Maven Central'
         url = 'https://repo.maven.apache.org/maven2'
     }
+
+    maven {
+        url = "https://maven.isxander.dev/releases"
+
+        content {
+            includeGroup "dev.isxander"
+            includeGroup "org.quiltmc.parsers"
+        }
+    }
+
+    maven {
+        url = "https://maven.azureaaron.net/releases"
+
+        content {
+            includeGroup "net.azureaaron"
+        }
+    }
+
+    maven {
+        url = "https://maven.azureaaron.net/snapshots"
+
+        content {
+            includeGroup "net.azureaaron"
+        }
+    }
+
+    maven {
+        url = "https://maven.notenoughupdates.org/releases"
+
+        content {
+            includeGroup "org.notenoughupdates.moulconfig"
+        }
+    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
+//    mappings loom.officialMojangMappings()
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    include modImplementation("net.azureaaron:dandelion:1.0.0-alpha.10+1.21.10")
+    include modImplementation("dev.isxander:yet-another-config-lib:3.8.1+1.21.11-fabric")
 }
 
 base {

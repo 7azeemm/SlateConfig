@@ -1,9 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.hazem.slateconfig.mixin",
+  "package": "dev.hazem.slateconfig.mixins",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
+  "client": [
+    "accessors.BufferBuilderAccessor",
+    "accessors.DrawContextAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
