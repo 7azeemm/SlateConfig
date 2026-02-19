@@ -1,7 +1,6 @@
 package dev.hazem.slateconfig.render.states;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import dev.hazem.slateconfig.mixins.accessors.DrawContextAccessor;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.render.state.SimpleGuiElementRenderState;
@@ -30,7 +29,7 @@ public abstract class SimpleShapeRenderState implements SimpleGuiElementRenderSt
         this.color = color;
         this.borderColor = borderColor;
         this.borderThickness = borderThickness;
-        this.scissorArea = ((DrawContextAccessor) context).getScissorStack().peekLast();
+        this.scissorArea = context.scissorStack.peekLast();
         this.bounds = createBounds(x, y, w, h, pose, scissorArea);
     }
 

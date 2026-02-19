@@ -13,8 +13,22 @@ public class Box {
         this.h = height;
     }
 
-    public boolean isHovered(int mouseX, int mouseY) {
-        return mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + h;
+    public Box(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setSize(int w, int h) {
+        this.w = w;
+        this.h = h;
+    }
+
+    public boolean isHovered(Box scissorBox, int mouseX, int mouseY) {
+        return Box.isBoxHovered(scissorBox, mouseX, mouseY) && isBoxHovered(this, mouseX, mouseY);
+    }
+
+    public static boolean isBoxHovered(Box box, int mouseX, int mouseY) {
+        return mouseX >= box.x && mouseX < box.x + box.w && mouseY >= box.y && mouseY < box.y + box.h;
     }
 
     public void render(DrawContext context, float radius, int color) {

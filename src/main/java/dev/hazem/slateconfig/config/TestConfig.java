@@ -4,17 +4,20 @@ import dev.hazem.slateconfig.annotations.Page;
 
 public class TestConfig {
 
+    @Page(title = "Slayers")
+    public Slayers slayers = new Slayers();
+
     @Page(title = "General")
     public General general = new General();
+
+    @Page(title = "Dungeons")
+    public Dungeons dungeons = new Dungeons();
 
     @Page(title = "UI And Visuals")
     public General uiAndVisuals = new General();
 
     @Page(title = "Helpers")
     public General helpers = new General();
-
-    @Page(title = "Dungeons")
-    public General dungeons = new General();
 
     @Page(title = "Mining")
     public General mining = new General();
@@ -30,9 +33,6 @@ public class TestConfig {
 
     @Page(title = "Hunting")
     public General hunting = new General();
-
-    @Page(title = "Slayers")
-    public General slayers = new General();
 
     @Page(title = "Misc")
     public General misc = new General();

@@ -1,22 +1,28 @@
 package dev.hazem.slateconfig.options.adapters;
 
-import dev.hazem.slateconfig.options.OptionType;
-import dev.hazem.slateconfig.options.OptionTypeAdapter;
+import dev.hazem.slateconfig.gui.components.Box;
+import dev.hazem.slateconfig.nodes.OptionNode;
+import dev.hazem.slateconfig.options.OptionPosition;
+import dev.hazem.slateconfig.options.OptionAdapter;
+import net.minecraft.client.gui.Click;
+import net.minecraft.client.gui.DrawContext;
 
-public class NumberAdapter<T extends Number> implements OptionTypeAdapter<T> {
-    private final Class<T> type;
+public class NumberAdapter extends OptionAdapter<Number> {
 
-    public NumberAdapter(Class<T> type) {
-        this.type = type;
+    public NumberAdapter(OptionNode<Number> option) {
+        super(option, 0, 0);
     }
 
     @Override
-    public Class<T> getType() {
-        return type;
+    public void render(DrawContext context, int mouseX, int mouseY, Box scissorBox, float deltaTicks) {
     }
 
     @Override
-    public OptionType getOptionType() {
-        return OptionType.NUMBER;
+    public void onClick(Click click) {
+    }
+
+    @Override
+    public OptionPosition position() {
+        return OptionPosition.RIGHT;
     }
 }

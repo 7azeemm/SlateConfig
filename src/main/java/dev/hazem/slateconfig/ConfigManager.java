@@ -1,6 +1,6 @@
 package dev.hazem.slateconfig;
 
-import dev.hazem.slateconfig.options.OptionTypeRegistry;
+import dev.hazem.slateconfig.options.OptionRegistry;
 import dev.hazem.slateconfig.utils.ReflectionUtils;
 
 import java.nio.file.Path;
@@ -15,10 +15,10 @@ public class ConfigManager<T> {
     public ConfigManager(Class<T> configClass, Path path) {
         this.configClass = Objects.requireNonNull(configClass);
         this.serializer = new ConfigSerializer<>(this, Objects.requireNonNull(path));
-        OptionTypeRegistry.init();
+        OptionRegistry.init();
         createInstance();
 
-        this.metadata = ConfigMetadataScanner.scan(configClass);
+        this.metadata = MetadataScanner.scan(instance, configClass);
 //        metadata.print();
     }
 

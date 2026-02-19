@@ -20,7 +20,7 @@ public class DirectVertexConsumer implements VertexConsumer {
 
     public DirectVertexConsumer(BufferBuilder original) {
         this.accessor = (BufferBuilderAccessor) original;
-        format = accessor.getVertexFormat();
+        this.format = accessor.getVertexFormat();
         newVert();
     }
 

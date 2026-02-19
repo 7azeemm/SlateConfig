@@ -4,8 +4,7 @@
   "package": "dev.hazem.slateconfig.mixins",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "accessors.BufferBuilderAccessor",
-    "accessors.DrawContextAccessor"
+    "accessors.BufferBuilderAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

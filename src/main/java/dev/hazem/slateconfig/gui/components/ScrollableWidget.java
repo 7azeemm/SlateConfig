@@ -5,39 +5,53 @@ import net.minecraft.client.gui.DrawContext;
 
 public abstract class ScrollableWidget extends Widget {
     protected final Scrollbar scrollbar;
-    protected int maxHeight;
+    protected int totalExtent;
+    protected Box scissorBox;
 
-    public ScrollableWidget() {
-        this.scrollbar = new Scrollbar();
+    public ScrollableWidget(Scrollbar.Orientation orientation) {
+        this.scrollbar = new Scrollbar(orientation);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-        float scrollOffset = scrollbar.getScrollOffset();
+        int scrollOffset = (int) scrollbar.getScrollOffset();
 
-        this.hovered = context.scissorContains(mouseX, mouseY)
-                && mouseX >= this.x
-                && mouseY >= this.y
-                && mouseX < this.x + this.width
-                && mouseY < this.y + this.height;
+        preRender(context, mouseX, mouseY, deltaTicks);
 
-        context.enableScissor(x, y, x + width, y + height);
+        Scrollbar.Orientation orientation = scrollbar.getOrientation();
+        int xOffset = orientation == Scrollbar.Orientation.HORIZONTAL ? scrollOffset : 0;
+        int yOffset = orientation == Scrollbar.Orientation.VERTICAL ? scrollOffset : 0;
+        scissorBox = new Box(x + xOffset, y + yOffset, width, height);
+        hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+
         context.getMatrices().pushMatrix();
-        context.getMatrices().translate(0, -scrollOffset);
+        context.enableScissor(x, y, x + width, y + height);
+        context.getMatrices().translate(-xOffset, -yOffset);
 
-        this.renderWidget(context, mouseX, (int) (mouseY + scrollOffset), deltaTicks);
+        this.renderWidget(context, mouseX + xOffset, mouseY + yOffset, deltaTicks);
 
-        context.getMatrices().popMatrix();
         context.disableScissor();
+        context.getMatrices().popMatrix();
 
         scrollbar.render(context, mouseX, mouseY);
+
+        context.getMatrices().pushMatrix();
+        context.getMatrices().translate(-xOffset, -yOffset);
+        postRender(context, mouseX, mouseY, deltaTicks);
+        context.getMatrices().popMatrix();
     }
 
-    public void updateMaxHeight(int maxHeight) {
-        int oldValue = this.maxHeight;
-        this.maxHeight = maxHeight;
-        if (oldValue != maxHeight) {
-            scrollbar.updateOffset(height, maxHeight);
+    public void preRender(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    }
+
+    public void postRender(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    }
+
+    public void updateScrollbar(int totalExtent) {
+        int oldValue = this.totalExtent;
+        this.totalExtent = totalExtent;
+        if (oldValue != totalExtent) {
+            scrollbar.updateOffset(getExtent(), totalExtent);
         }
     }
 
@@ -53,11 +67,16 @@ public abstract class ScrollableWidget extends Widget {
 
     @Override
     public boolean mouseDragged(Click click, double offsetX, double offsetY) {
-        return scrollbar.mouseDragged(offsetY, height, maxHeight);
+        double offset = scrollbar.getOrientation() == Scrollbar.Orientation.VERTICAL ? offsetY : offsetX;
+        return scrollbar.mouseDragged(offset, getExtent(), totalExtent);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        return scrollbar.mouseScrolled(verticalAmount, height, maxHeight);
+        return scrollbar.mouseScrolled(verticalAmount, getExtent(), totalExtent);
+    }
+
+    private int getExtent() {
+        return scrollbar.getOrientation() == Scrollbar.Orientation.VERTICAL ? height : width;
     }
 }

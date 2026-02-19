@@ -2,18 +2,18 @@ package dev.hazem.slateconfig.gui.components;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Widget implements Drawable, Element, Selectable {
     protected final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+    private final List<Widget> children = new ArrayList<>();
     protected int x, y, width, height;
-    boolean hovered;
+    protected boolean hovered;
     private boolean focused;
-    private boolean shouldFocus = true;
 
     public Widget() {}
 
@@ -22,10 +22,13 @@ public abstract class Widget implements Drawable, Element, Selectable {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.children.clear();
         init();
     }
 
-    protected abstract void init();
+    protected void init() {
+    }
+
     protected abstract void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks);
 
     @Override
@@ -36,6 +39,46 @@ public abstract class Widget implements Drawable, Element, Selectable {
                 && mouseX < this.x + this.width
                 && mouseY < this.y + this.height;
         this.renderWidget(context, mouseX, mouseY, deltaTicks);
+    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        for (Widget child : children) {
+            if (child.isHovered() && child.mouseClicked(click, doubled)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(Click click) {
+        for (Widget child : children) {
+            if (child.mouseReleased(click)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+        for (Widget child : children) {
+            if (child.isHovered() && child.mouseDragged(click, offsetX, offsetY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        for (Widget child : children) {
+            if (child.isHovered() && child.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -86,13 +129,7 @@ public abstract class Widget implements Drawable, Element, Selectable {
         this.focused = focused;
     }
 
-    public void disableFocus() {
-        this.shouldFocus = false;
-    }
-
-    public boolean shouldFocus() {
-        boolean oldValue = shouldFocus;
-        shouldFocus = true;
-        return oldValue;
+    public void addChild(Widget child) {
+        children.add(child);
     }
 }
